@@ -9,19 +9,28 @@ class ArgsAnalyzer
 {
 public:
 
+	//these functions are called to setup arguments.
+	//it after, call 'analyze' functions.
     void acceptValue(bool enable) { acceptValue_ = enable; }
     void setHelpHeaderString(const char* str) { helpHeaderStr_ = str; }
     void setHelpFooterString(const char* str) { helpFooterStr_ = str; }
-    void addOption(const char* name, const char* comment);
-    void addParam(const char* name, const char* comment);
-    bool analyze(int argc, const char** args);
+    void addOption(const char* name, const char* comment, const char* defaultValue);
+    void addParam(const char* name, const char* comment, const char* defaultValue);
     void printHelp();
 
+    bool analyze(int argc, const char** args);
+
+	//after the 'analyze' functions are called, call these functions.
+	const std::vector<std::string>& values() const { return values_; }
+	bool hasParam(const char* name) const;
+	bool isOnOption(const char* name) const;
+	const char* getParameter(const char* name) const;
 
 private:
     struct ParamDefinition {
         std::string name;
         std::string comment;
+		std::string defaultValue;
         size_t      nameLen;
         bool isOption;
     };
